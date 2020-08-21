@@ -1,0 +1,28 @@
+<div class="form-area-droppable-area" cdkDropList [cdkDropListConnectedTo]="connectedTo" [cdkDropListData]="elements"
+	(cdkDropListDropped)="onDrop($event)" id="form-area-drop-list">
+	<div *ngFor="let element of elements; let index = index;" cdkDrag [cdkDragData]="element" class="element">
+		<div class="element-drag-placeholder" *cdkDragPlaceholder></div>
+		<div *cdkDragPreview class="form-element-drag-preview">
+			<span>{{ element.name }}</span>
+		</div>
+		<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: element}"></ng-container>
+		<div class="section-droppable-area" cdkDropList [cdkDropListConnectedTo]="connectedTo"
+			class="section-droppable-area" [cdkDropListData]="element.children" id="section-drop-list"
+			(cdkDropListDropped)="onDropIntoSection($event, index)" *ngIf="element.type === 'parent'">
+			<div *ngFor="let child of element.children" cdkDrag [cdkDragData]="{ element: child, parentId: element.id }" class="child-element">
+				<div class="element-drag-placeholder" *cdkDragPlaceholder></div>
+				<div *cdkDragPreview class="form-element-drag-preview">
+					<span>{{ child.name }}</span>
+				</div>
+				<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: child}">
+				</ng-container>
+			</div>
+		</div>
+	</div>
+</div>
+<ng-template #elTemplate let-element="element">
+	<div class="element-wrapper">
+		<div class="name">{{element.name}}</div>
+		<a href="#" (click)="delete(element.id)">Delete</a>
+	</div>
+</ng-template>
