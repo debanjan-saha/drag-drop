@@ -2,7 +2,8 @@ import { Component, VERSION } from "@angular/core";
 import {
   CdkDragDrop,
   transferArrayItem,
-  moveItemInArray
+  moveItemInArray,
+CdkDragEnter
 } from "@angular/cdk/drag-drop";
 
 @Component({
@@ -11,24 +12,36 @@ import {
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
+  dropLists = [];
   connectedTo = ["section-drop-list", "form-area-drop-list"];
   elements = [
     {
-      name: "Debanjan Saha",
+      name: "Group 1",
       id: 28,
       type: "parent",
       children: [
-        { name: "Bincy Pothen", id: 29 },
-        { name: "Pankul Gupta", id: 30 }
+        { name: "Child 1", id: 29 },
+        { name: "Child 2", id: 30 },
+        { name: "Child 3", id: 35 },
+        { name: "Child 4", id: 36 }
       ]
     },
-    { name: "Prajakta Aryamane", id: 31 },
-    { name: "Govind Bisht", id: 32 },
-    { name: "Rahul Vyas", id: 33 },
-    { name: "Sachin Mane", id: 34 }
+    { name: "Child 5", id: 31 },
+    { name: "Child 6", id: 32 },
+    { name: "Child 7", id: 33 },
+    { name: "Child 8", id: 34 },
+    {
+      name: "Group 2",
+      id: 27,
+      type: "parent",
+      children: [
+        { name: "Child 9", id: 37 },
+        { name: "Child 10", id: 38 }
+      ]
+    },
   ];
 
-  onDropIntoSection(event: CdkDragDrop<any>, index: number) {
+  onDropIntoSection(event: any, index: number) {
     if (event.previousContainer.id === event.container.id) {
       moveItemInArray(
         this.elements[0].children,
@@ -80,4 +93,24 @@ export class AppComponent {
       }
     }
   }
+
+  onDragStarted(event: any) {
+    // this.dropLists = ["form-area-drop-list"];
+  }
+
+  onDragStopped(event: any) {
+    // this.dropLists = ["section-drop-list"];
+  }
+
+  getConnectedDropList() {
+    const listIds = ['form-area-drop-list'];
+    this.elements.forEach(el => {
+      if (el.type === 'parent') {
+        listIds.unshift('section-drop-list-' + el.id);
+      }
+    });
+    return listIds;
+  }
+
+
 }
