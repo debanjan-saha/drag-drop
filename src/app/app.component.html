@@ -1,28 +1,28 @@
-<div class="form-area-droppable-area" cdkDropList [cdkDropListConnectedTo]="getConnectedDropList()" [cdkDropListData]="elements"
-	(cdkDropListDropped)="onDrop($event)" id="form-area-drop-list">
-	<div *ngFor="let element of elements; let index = index;" cdkDrag [cdkDragData]="element" class="element" cdkDropListGroup>
+<div class="form-area-droppable-area" cdkDropList [cdkDropListConnectedTo]="getConnectedDropList()"
+	[cdkDropListData]="elements" class="droppable-area container" (cdkDropListDropped)="onDrop($event)"
+	id="form-area-drop-list">
+	<div *ngFor="let element of elements; let index = index;" cdkDrag [cdkDragData]="element" class="element"
+		cdkDropListGroup>
 		<div class="element-drag-placeholder" *cdkDragPlaceholder></div>
-		<div *cdkDragPreview class="form-element-drag-preview">
-			<span>{{ element.name }}</span>
-		</div>
-		<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: element}"></ng-container>
+		<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: element, showChildren: false }"></ng-container>
 		<div class="section-droppable-area" cdkDropList [cdkDropListConnectedTo]="getConnectedDropList()"
-			class="section-droppable-area" [cdkDropListData]="element.children" id="section-drop-list-{{element.id}}"
+			class="droppable-area group" [cdkDropListData]="element.children" id="section-drop-list-{{element.id}}"
 			(cdkDropListDropped)="onDropIntoSection($event, index)" *ngIf="element.type === 'parent'">
-			<div *ngFor="let child of element.children" cdkDrag [cdkDragData]="{ element: child, parentId: element.id }" class="child-element" (cdkDragStarted)="onDragStarted($event)" (cdkDragReleased)="onDragStopped($event)">
+			<div *ngFor="let child of element.children" cdkDrag [cdkDragData]="{ element: child, parentId: element.id }"
+				class="element" (cdkDragStarted)="onDragStarted($event)" (cdkDragReleased)="onDragStopped($event)">
 				<div class="element-drag-placeholder" *cdkDragPlaceholder></div>
-				<div *cdkDragPreview class="form-element-drag-preview">
-					<span>{{ child.name }}</span>
-				</div>
-				<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: child}">
+				<ng-container [ngTemplateOutlet]="elTemplate" [ngTemplateOutletContext]="{element: child, showChildren: true }">
 				</ng-container>
 			</div>
 		</div>
 	</div>
 </div>
-<ng-template #elTemplate let-element="element">
+<ng-template #elTemplate let-element="element" let-showChildren="showChildren">
 	<div class="element-wrapper">
-		<div class="name">{{element.name}}</div>
-		<a href="#" (click)="delete(element.id)">Delete</a>
+		<div class="name" *ngIf="element.type !== 'parent'">{{element.name}}</div>
+		<h2 class="name" *ngIf="element.type === 'parent'">{{element.name}}</h2>
+		<ng-container *ngIf="element.type === 'parent' && showChildren">
+			<p *ngFor="let child of element.children">{{ child.name }}</p>
+		</ng-container>
 	</div>
 </ng-template>

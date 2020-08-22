@@ -20,23 +20,19 @@ export class AppComponent {
       id: 28,
       type: "parent",
       children: [
-        { name: "Child 1", id: 29 },
-        { name: "Child 2", id: 30 },
-        { name: "Child 3", id: 35 },
-        { name: "Child 4", id: 36 }
+        { name: "Child 1 - Group 1", id: 29 },
+        { name: "Child 2 - Group 1", id: 30 },
       ]
     },
-    { name: "Child 5", id: 31 },
-    { name: "Child 6", id: 32 },
-    { name: "Child 7", id: 33 },
-    { name: "Child 8", id: 34 },
+    { name: "Child 3", id: 33 },
+    { name: "Child 4", id: 34 },
     {
       name: "Group 2",
       id: 27,
       type: "parent",
       children: [
-        { name: "Child 9", id: 37 },
-        { name: "Child 10", id: 38 }
+        { name: "Child 5 - Group 2", id: 37 },
+        { name: "Child 6 - Group 2", id: 38 }
       ]
     },
   ];
@@ -48,7 +44,7 @@ export class AppComponent {
         event.previousIndex,
         event.currentIndex
       );
-    } else if (event.previousContainer.id === "form-area-drop-list") {
+    } else {
       transferArrayItem(
         this.elements,
         this.elements[index].children,
@@ -61,7 +57,7 @@ export class AppComponent {
   onDrop(event: CdkDragDrop<any>) {
     if (event.previousContainer.id === event.container.id) {
       moveItemInArray(this.elements, event.previousIndex, event.currentIndex);
-    } else if (event.previousContainer.id === "section-drop-list") {
+    } else {
       const parentId = event.item.data.parentId;
       const index = this.elements.findIndex(el => el.id === parentId);
       if (index !== -1) {
@@ -71,25 +67,6 @@ export class AppComponent {
         event.previousIndex,
         event.currentIndex
       );
-      }
-    }
-  }
-
-  delete(id: number) {
-    for (let i = 0; i < this.elements.length; i++) {
-      const el = this.elements[i];
-      if (el.type === "parent") {
-        const index = el.children.findIndex(child => child.id === id);
-        if (index !== -1) {
-          el.children.splice(index, 1);
-          break;
-        }
-      } else {
-        const index = this.elements.findIndex(ele => ele.id === id);
-        if (index !== -1) {
-          this.elements.splice(index, 1);
-          break;
-        }
       }
     }
   }
